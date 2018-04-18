@@ -5,8 +5,8 @@
 # ===  create working directory
 # =============================================
 
-mkdir skript
-cd ./skript
+#mkdir skript
+#cd ./skript
 
 # =============================================
 # ===  verify : MAC address - product_uuid
