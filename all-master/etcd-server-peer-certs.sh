@@ -7,6 +7,9 @@
 mkdir -p /etc/kubernetes/pki/etcd
 cd /etc/kubernetes/pki/etcd
 
+export PEER_NAME=$(hostname)
+export PRIVATE_IP=$(ip addr show eth0 | grep -Po 'inet \K[\d.]+')
+
 cfssl print-defaults csr > config.json
 sed -i '0,/CN/{s/example\.net/'"$PEER_NAME"'/}' config.json
 sed -i 's/www\.example\.net/'"$PRIVATE_IP"'/' config.json
