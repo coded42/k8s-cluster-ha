@@ -7,7 +7,8 @@
 mkdir -p /etc/kubernetes/pki/etcd
 cd /etc/kubernetes/pki/etcd
 
-export ETCD_VERSION=v3.2.18
+export ETCD_VERSION=v3.1.12
+#export ETCD_VERSION=v3.2.18
 curl -sSL https://github.com/coreos/etcd/releases/download/${ETCD_VERSION}/etcd-${ETCD_VERSION}-linux-amd64.tar.gz | tar -xzv --strip-components=1 -C /usr/local/bin/
 rm -rf etcd-$ETCD_VERSION-linux-amd64*
 
@@ -27,6 +28,17 @@ echo "PRIVATE_IP=$PRIVATE_IP" >> /etc/etcd.env
 # =============================================
 # ===   copy the systemd unit file
 # =============================================
+
+# hostnames
+etcd0="master0"
+etcd1="master1"
+etcd2="master2"
+
+# IP address
+etcd0ip="10.0.0.4"
+etcd1ip="10.0.0.5"
+etcd2ip="10.0.0.6"
+
 cat >/etc/systemd/system/etcd.service <<EOF
 [Unit]
 Description=etcd
@@ -57,7 +69,7 @@ ExecStart=/usr/local/bin/etcd --name ${PEER_NAME} \
     --peer-key-file=/etc/kubernetes/pki/etcd/peer-key.pem \
     --peer-client-cert-auth \
     --peer-trusted-ca-file=/etc/kubernetes/pki/etcd/ca.pem \
-    --initial-cluster master0=https://10.0.0.4:2380,master1=https://10.0.0.5:2380 \
+    --initial-cluster $etcd0=https://$etcd0ip:2380,$etcd1=https://$etcd1ip:2380,$etcd2=https://$etcd2ip:2380 \
     --initial-cluster-token my-etcd-token \
     --initial-cluster-state new
 
