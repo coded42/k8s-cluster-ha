@@ -9,11 +9,13 @@ master1="10.0.0.5"
 master2="10.0.0.6"
 lb="52.151.43.204"
 
+export serverip=$(ip addr show eth0 | grep -Po 'inet \K[\d.]+')
+
 cat >config.yaml <<EOF
 apiVersion: kubeadm.k8s.io/v1alpha1
 kind: MasterConfiguration
 api:
-  advertiseAddress: $master0
+  advertiseAddress: $serverip
 etcd:
   endpoints:
   - https://$master0:2379
